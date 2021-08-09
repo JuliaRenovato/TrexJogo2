@@ -51,15 +51,15 @@ function setup(){
   var mensagem = "Isso é uma mensagem";
   
   //Criar ambiente inicial de jogo
-  createCanvas(600,200);  
+  createCanvas(windowWidth,windowHeight);
   
   //Criar sprite do T-Rex
-  trex = createSprite(50,150,20,50);
+  trex = createSprite(50,height-100,20,50);
   trex.addAnimation("correndo", trexCorrendo);
   trex.addAnimation("trexCollided", trexColidiu);
   
   //Adicionar escala e posição ao Trex
-  trex.scale = 0.5;
+  trex.scale = 0.8;
   trex.x = 50;
   
   //T-Rex Raio de Colisão
@@ -68,12 +68,12 @@ function setup(){
   trex.setCollider("circle",0,0,40);
   
   //Criar Sprite do Solo
-  solo = createSprite(200,180,400,20);
+  solo = createSprite(width/2,height-80,width,2);
   solo.addImage("ground",imagemSolo);
   solo.x = solo.width / 2;
   
   //Criar Sprite do Solo Invisível
-  soloInvisivel = createSprite(200,195,400,20);
+  soloInvisivel = createSprite(width/2,height-30,width,-10);
   soloInvisivel.visible = false;
   
   //Criar grupos de obstáculos e nuvens
@@ -81,14 +81,14 @@ function setup(){
   grupoNuvens = new Group();
   
   //Criar Icones de Fim de Jogo
-  fimDeJogo = createSprite(300,100);
+  fimDeJogo = createSprite(width/2,height/2 -50);
   fimDeJogo.addImage("fimDeJogo",ImgFimDeJogo);
-  fimDeJogo.scale = 0.5;
+  fimDeJogo.scale = 0.8;
   fimDeJogo.visible = false;
   
-  reiniciar = createSprite(300,140);
+  reiniciar = createSprite(width/2,height/2 -100);
   reiniciar.addImage("reiniciar",ImgReiniciar);
-  reiniciar.scale = 0.5;
+  reiniciar.scale = 0.8;
   reiniciar.visible = false;
 }
 
@@ -100,7 +100,9 @@ function draw(){
   background("white");
   
   //Marcar pontuação do Jogo
-  text("Pontuação: " + pontuacao, 500, 50);
+  textSize(30);
+  text("Pontuação: " + pontuacao, 1240, 55);
+  
   
   //Mostrar o Modo de jogo no Console
   //console.log("Modo de Jogo é: ", modoJogo);
@@ -124,8 +126,9 @@ function draw(){
     }
 
     //Saltar quando tecla espaço é pressionada
-    if(keyDown("space") && trex.y >160) {
+    if(touches.length > 0 || keyDown("space") && trex.y > height-130) {
       trex.velocityY = -10;
+      touches = [];
       
       //Adicionar efeito Sonoro T-Rex Salta
       somJump.play();
@@ -174,6 +177,7 @@ function draw(){
       console.log("Reinicair o jogo");
       
       //Reiniciar o jogo
+      touches = [];
       reset();
       
 
@@ -190,14 +194,14 @@ function draw(){
   drawSprites();
   
   //Mostrar Posição X e Y do mouse
-  text("("+mouseX+";"+mouseY+")",mouseX-10,mouseY-10);
+  //text("("+mouseX+";"+mouseY+")",mouseX-10,mouseY-10);
 }
 
 function gerarNuvens(){
   //Escrever aqui o código para gerar as nuvens
   if(frameCount % 60 === 0){
-    var nuvem = createSprite(600,100,40,10);
-    nuvem.velocityX = -3;
+    var nuvem = createSprite(width+20,height-300,40,10);
+    nuvem.velocityX = -4;
     
     //Adicionar imagem da nuvem nos sprites
     nuvem.addImage(imagemNuvem);
@@ -205,7 +209,7 @@ function gerarNuvens(){
     //console.log(nuvem.scale);
     
     //Tornar posição Y da nuvem aleatória
-    nuvem.y = Math.round(random(10,100));
+    nuvem.y = Math.round(random(10,300));
     
     //Garantir que profundidade da nuvem seja maior que a do T-Rex
     nuvem.depth = trex.depth;
@@ -215,7 +219,7 @@ function gerarNuvens(){
     
     //Atrubuir tempo de duração da variável
     //Vida = Distância x velocidade
-    nuvem.lifetime = 200;
+    nuvem.lifetime = 1200;
     
     //Adicionar cada elemento nuvem criado ao grupo
     grupoNuvens.add(nuvem);
@@ -224,8 +228,8 @@ function gerarNuvens(){
 }
 
 function gerarObstaculos(){
-  if(frameCount % 60 === 0){
-    var obstaculo = createSprite(600,165,10,40);
+  if(frameCount % 100 === 0){
+    var obstaculo = createSprite(1000,height-80,20,60);
     
     //Atribuir velocidade ao obstáculo
     obstaculo.velocityX = -(5 + pontuacao/1000);
@@ -250,8 +254,8 @@ function gerarObstaculos(){
     }
     
     // Alterar escala e vida útil
-    obstaculo.scale = 0.5;
-    obstaculo.lifetime = 300;
+    obstaculo.scale = 0.8;
+    obstaculo.lifetime = 500;
     
     //Adicionar cada elemento de obstáculo criado ao grupo
     grupoObstaculos.add(obstaculo);

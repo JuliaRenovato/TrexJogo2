@@ -171,7 +171,7 @@ function draw(){
     reiniciar.visible = true;
     
     // Reiniciar ao clicar no ícone reiniciar
-    if(mousePressedOver(reiniciar)){
+    if(touches.length > 0 || mousePressedOver(reiniciar)){
       
       //Registrar informação no console
       console.log("Reinicair o jogo");
